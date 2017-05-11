@@ -13,16 +13,31 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'maven-publish'
 
-version = "1.0"
-group= "com.yourname.modid"
-archivesBaseName = "modid"
+ext.buildnumber = 0
+if (System.getenv('BUILD_NUMBER') != null)
+    project.buildnumber = System.getenv('BUILD_NUMBER')
+else
+    logger.lifecycle "No build number detected, setting to 0"
+
+group= "com.theprogrammingturkey.progressiontweaks"
+archivesBaseName= "ProgressionTweaks"
+version= "${mc_version}-${mod_version}.${buildnumber}"
+
+sourceCompatibility = targetCompatibility = "1.8"
+compileJava {
+    sourceCompatibility = targetCompatibility = "1.8"
+}
 
 minecraft {
-    version = "1.11.2-13.20.0.2228"
+    version = "${mc_version}-${forge_version}"
     runDir = "run-1.11"
 
     mappings = "snapshot_20161111"
+    
+    replace "@VERSION@", project.version
+    replaceIn "ProgressionCore.java"
 }
 
 repositories {
@@ -40,20 +55,37 @@ dependencies {
 
 processResources
 {
-    // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
-    // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // replace version and mcversion
+        include 'mcmod.info'            
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
         
-    // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+    }
+}
+
+build.dependsOn sourceJar
+
+publishing {
+    tasks.publish.dependsOn 'build'
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            artifact sourceJar
+        }
+    }
+
+    repositories {
+        if (project.hasProperty('mavendir')) {
+            maven { url mavendir }
+        }
+        else{
+        	logger.error('Failed to find maven directory')
+        }
     }
 }
