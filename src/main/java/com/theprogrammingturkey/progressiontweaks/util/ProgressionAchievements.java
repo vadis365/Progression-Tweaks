@@ -15,7 +15,7 @@ public class ProgressionAchievements
 	{
 		String id = ProgressionCore.MODID;
 		toTheCore = new Achievement(id + ".toTheCore", id + ".toTheCore", 0, 0, ProgressionItems.LIME, null).registerStat();
-		page = new AchievementPage("Chance Cubes", toTheCore);
+		page = new AchievementPage(ProgressionCore.NAME, toTheCore);
 		AchievementPage.registerAchievementPage(page);
 	}
 }
