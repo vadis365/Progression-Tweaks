@@ -4,15 +4,17 @@ import org.apache.logging.log4j.Logger;
 
 import com.theprogrammingturkey.gobblecore.IModCore;
 import com.theprogrammingturkey.gobblecore.blocks.BlockManager;
+import com.theprogrammingturkey.gobblecore.items.ItemManager;
 import com.theprogrammingturkey.gobblecore.managers.ProxyManager;
 import com.theprogrammingturkey.gobblecore.proxy.IBaseProxy;
 import com.theprogrammingturkey.progressiontweaks.blocks.ProgressionBlocks;
 import com.theprogrammingturkey.progressiontweaks.commands.ProgressionCommands;
 import com.theprogrammingturkey.progressiontweaks.config.ProgressionConfigLoader;
+import com.theprogrammingturkey.progressiontweaks.items.ProgressionItems;
 import com.theprogrammingturkey.progressiontweaks.network.ProgressionPacketHandler;
+import com.theprogrammingturkey.progressiontweaks.util.ProgressionAchievements;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -40,7 +42,7 @@ public class ProgressionCore implements IModCore
 	{
 		public ItemStack getTabIconItem()
 		{
-			return new ItemStack(Blocks.DIRT);
+			return new ItemStack(ProgressionBlocks.FIRE_PIT_UNLIT);
 		}
 	};
 
@@ -54,9 +56,11 @@ public class ProgressionCore implements IModCore
 		ProxyManager.registerModProxy(proxy);
 
 		BlockManager.registerBlockHandler(new ProgressionBlocks(), this);
-		// ItemManager.registerItems();
+		ItemManager.registerItemHandler(new ProgressionItems(), this);
 
 		ProgressionPacketHandler.init();
+		
+		ProgressionAchievements.loadAchievements();
 	}
 
 	@EventHandler
@@ -70,7 +74,7 @@ public class ProgressionCore implements IModCore
 	{
 
 	}
-	
+
 	@EventHandler
 	public void serverLoad(FMLServerStartingEvent event)
 	{

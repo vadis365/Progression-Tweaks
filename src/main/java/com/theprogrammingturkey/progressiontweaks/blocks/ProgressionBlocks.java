@@ -6,6 +6,7 @@ import com.theprogrammingturkey.gobblecore.blocks.IBlockHandler;
 import com.theprogrammingturkey.progressiontweaks.ProgressionCore;
 import com.theprogrammingturkey.progressiontweaks.blocks.tileentities.TileFirePit;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -17,7 +18,6 @@ public class ProgressionBlocks implements IBlockHandler
 	@Override
 	public void registerBlocks(BlockLoader loader)
 	{
-		System.out.println("HERE --------------------------------------------------------------------------------");
 		loader.setCreativeTab(ProgressionCore.modTab);
 
 		loader.registerBlock(FIRE_PIT_LIT = new BlockFirePit(true), FIRE_PIT_LIT.getBlockName());
@@ -28,8 +28,10 @@ public class ProgressionBlocks implements IBlockHandler
 	}
 
 	@Override
-	public void registerModels(BlockLoader loader, ItemModelMesher mesher)
+	public void registerModels(BlockLoader loader)
 	{
+		ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
+		
 		loader.registerBlockModel(mesher, FIRE_PIT_UNLIT, 0, FIRE_PIT_UNLIT.getBlockName());
 	}
 
