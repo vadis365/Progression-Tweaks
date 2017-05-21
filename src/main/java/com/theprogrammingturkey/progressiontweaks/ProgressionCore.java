@@ -25,7 +25,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = ProgressionCore.MODID, version = ProgressionCore.VERSION, name = ProgressionCore.NAME, dependencies = "before:gobblecore")
+@Mod(modid = ProgressionCore.MODID, version = ProgressionCore.VERSION, name = ProgressionCore.NAME, dependencies = "after:gobblecore")
 public class ProgressionCore implements IModCore
 {
 	public static final String MODID = "progressiontweaks";
@@ -53,14 +53,13 @@ public class ProgressionCore implements IModCore
 	{
 		logger = event.getModLog();
 		ProgressionConfigLoader.loadConfigSettings(event.getSuggestedConfigurationFile());
-		ProxyManager.registerModProxy(proxy);
-
+		
 		BlockManager.registerBlockHandler(new ProgressionBlocks(), this);
 		ItemManager.registerItemHandler(new ProgressionItems(), this);
-
-		ProgressionPacketHandler.init();
 		
-		ProgressionAchievements.loadAchievements();
+		ProxyManager.registerModProxy(proxy);
+		
+		ProgressionPacketHandler.init();
 	}
 
 	@EventHandler
@@ -72,7 +71,7 @@ public class ProgressionCore implements IModCore
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-
+		ProgressionAchievements.loadAchievements();
 	}
 
 	@EventHandler
