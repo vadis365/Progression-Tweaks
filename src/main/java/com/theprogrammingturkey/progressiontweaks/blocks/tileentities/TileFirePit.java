@@ -40,6 +40,11 @@ public class TileFirePit extends TileEntity implements ITickable
 				{
 					burnTimeLeft = -1;
 					cookTimeLeft = -1;
+					TileEntity tileentity = this.worldObj.getTileEntity(pos);
+					this.worldObj.setBlockState(pos, ProgressionBlocks.FIRE_PIT_UNLIT.getDefaultState());
+					this.worldObj.setBlockState(pos, ProgressionBlocks.FIRE_PIT_UNLIT.getDefaultState());
+					tileentity.validate();
+					this.worldObj.setTileEntity(pos, tileentity);
 					worldObj.playSound((double) ((float) pos.getX() + 0.5F), (double) ((float) pos.getY() + 0.5F), (double) ((float) pos.getZ() + 0.5F), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
 					ProgressionPacketHandler.INSTANCE.sendToAll(new PacketUdateFirePit(getItemCooking(), getBurnTimeLeft(), getCookTimeLeft(), getPos().getX(), getPos().getY(), getPos().getZ()));
 				}
