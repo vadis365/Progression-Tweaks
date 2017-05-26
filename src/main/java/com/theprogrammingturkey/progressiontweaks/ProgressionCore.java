@@ -53,13 +53,15 @@ public class ProgressionCore implements IModCore
 	{
 		logger = event.getModLog();
 		ProgressionConfigLoader.loadConfigSettings(event.getSuggestedConfigurationFile());
-		
+
 		BlockManager.registerBlockHandler(new ProgressionBlocks(), this);
 		ItemManager.registerItemHandler(new ProgressionItems(), this);
-		
+
 		ProxyManager.registerModProxy(proxy);
-		
+
 		ProgressionPacketHandler.init();
+
+		ProgressionCommands.loadCommands();
 	}
 
 	@EventHandler
@@ -72,12 +74,6 @@ public class ProgressionCore implements IModCore
 	public void postInit(FMLPostInitializationEvent event)
 	{
 		ProgressionAchievements.loadAchievements();
-	}
-
-	@EventHandler
-	public void serverLoad(FMLServerStartingEvent event)
-	{
-		ProgressionCommands.loadCommands();
 	}
 
 	@Override
