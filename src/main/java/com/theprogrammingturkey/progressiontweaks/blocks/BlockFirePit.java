@@ -7,9 +7,11 @@ import com.theprogrammingturkey.progressiontweaks.blocks.tileentities.TileFirePi
 import com.theprogrammingturkey.progressiontweaks.network.PacketUdateFirePit;
 import com.theprogrammingturkey.progressiontweaks.network.ProgressionPacketHandler;
 import com.theprogrammingturkey.progressiontweaks.registries.FirePitRegistry;
+import com.theprogrammingturkey.progressiontweaks.registries.FirePitRegistry.CookingResult;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
@@ -59,26 +61,35 @@ public class BlockFirePit extends BaseBlock implements ITileEntityProvider
 		if(te != null)
 		{
 			ItemStack heldItem = player.getHeldItem(hand);
-			ItemStack output = FirePitRegistry.INSTANCE.getResultFromInput(heldItem);
-			int burntime = FirePitRegistry.INSTANCE.getBurnTimeFromFuel(heldItem);
 			boolean flag = false;
-			if((heldItem == null || te.getItemCooking() != null) && (burntime == -1 || te.isCooking()))
+			CookingResult result = FirePitRegistry.INSTANCE.getResultFromInput(heldItem);
+			if(result != null)
 			{
-				te.dropCurrentItem(player);
-				flag = true;
+				ItemStack output = result.getResult();
+				int burntime = result.getDuration();
+
+				if(output != null && te.getItemCooking() == null)
+				{
+					te.startCooking(heldItem, burntime);
+					player.inventory.decrStackSize(player.inventory.currentItem, 1);
+					flag = true;
+				}
 			}
-			else if(output != null && te.getItemCooking() == null)
+			else
 			{
-				te.startCooking(heldItem);
-				player.inventory.decrStackSize(player.inventory.currentItem, 1);
-				flag = true;
-			}
-			else if(burntime != -1 && !te.isCooking())
-			{
-				te.startBurnTime(burntime);
-				player.inventory.decrStackSize(player.inventory.currentItem, 1);
-				world.playSound((EntityPlayer) null, pos, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
-				flag = true;
+				int burntime = FirePitRegistry.INSTANCE.getBurnTimeFromFuel(heldItem);
+				if(burntime != -1 && !te.isCooking())
+				{
+					te.startBurnTime(burntime);
+					player.inventory.decrStackSize(player.inventory.currentItem, 1);
+					world.playSound((EntityPlayer) null, pos, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+					flag = true;
+				}
+				else
+				{
+					te.dropCurrentItem(player);
+					flag = true;
+				}
 			}
 
 			if(flag)
@@ -89,6 +100,12 @@ public class BlockFirePit extends BaseBlock implements ITileEntityProvider
 		}
 
 		return false;
+	}
+
+	public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn)
+	{
+		entityIn.setFire(5);
+		super.onEntityWalk(worldIn, pos, entityIn);
 	}
 
 	@SideOnly(Side.CLIENT)

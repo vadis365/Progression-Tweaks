@@ -9,18 +9,18 @@ import net.minecraft.item.ItemStack;
 public class FirePitRegistry
 {
 	public static final FirePitRegistry INSTANCE = new FirePitRegistry();
-	private Map<ItemStack, ItemStack> cookingRegistry = new HashMap<ItemStack, ItemStack>();
+	private Map<ItemStack, CookingResult> cookingRegistry = new HashMap<ItemStack, CookingResult>();
 	private Map<ItemStack, Integer> cookingFuelRegistry = new HashMap<ItemStack, Integer>();
 
 	public FirePitRegistry()
 	{
-		cookingRegistry.put(new ItemStack(Items.FISH), new ItemStack(Items.COOKED_FISH));
+		cookingRegistry.put(new ItemStack(Items.FISH), new CookingResult(new ItemStack(Items.COOKED_FISH), 200, 10));
 		cookingFuelRegistry.put(new ItemStack(Items.COAL), 10000);
 	}
 
-	public void registerCookingRecipe(ItemStack input, ItemStack result)
+	public void registerCookingRecipe(ItemStack input, ItemStack result, int duration, int xp)
 	{
-		cookingRegistry.put(input, result);
+		cookingRegistry.put(input, new CookingResult(result, duration, xp));
 	}
 
 	public void registerFuel(ItemStack fuel, int burnTime)
@@ -28,12 +28,12 @@ public class FirePitRegistry
 		cookingFuelRegistry.put(fuel, burnTime);
 	}
 
-	public ItemStack getResultFromInput(ItemStack input)
+	public CookingResult getResultFromInput(ItemStack input)
 	{
 		if(input == null)
 			return null;
 
-		ItemStack result = null;
+		CookingResult result = null;
 		for(ItemStack stack : cookingRegistry.keySet())
 			if(stack.getItem().equals(input.getItem()) && stack.getItemDamage() == input.getItemDamage())
 				result = cookingRegistry.get(stack);
@@ -44,11 +44,40 @@ public class FirePitRegistry
 	{
 		if(input == null)
 			return -1;
-		
+
 		int result = -1;
 		for(ItemStack stack : cookingFuelRegistry.keySet())
 			if(stack.getItem().equals(input.getItem()) && stack.getItemDamage() == input.getItemDamage())
 				result = cookingFuelRegistry.get(stack);
 		return result;
+	}
+
+	public static class CookingResult
+	{
+		private ItemStack result;
+		private int duration;
+		private int xp;
+
+		public CookingResult(ItemStack result, int duration, int xp)
+		{
+			this.result = result;
+			this.duration = duration;
+			this.xp = xp;
+		}
+
+		public ItemStack getResult()
+		{
+			return result;
+		}
+
+		public int getDuration()
+		{
+			return duration;
+		}
+
+		public int getXp()
+		{
+			return xp;
+		}
 	}
 }

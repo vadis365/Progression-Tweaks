@@ -1,16 +1,27 @@
 package com.theprogrammingturkey.progressiontweaks.blocks.tileentities;
 
+import java.util.List;
+
+import com.theprogrammingturkey.gobblecore.util.Scheduler;
+import com.theprogrammingturkey.gobblecore.util.Task;
 import com.theprogrammingturkey.progressiontweaks.blocks.ProgressionBlocks;
+import com.theprogrammingturkey.progressiontweaks.config.ProgressionSettings;
 import com.theprogrammingturkey.progressiontweaks.network.PacketUdateFirePit;
 import com.theprogrammingturkey.progressiontweaks.network.ProgressionPacketHandler;
 import com.theprogrammingturkey.progressiontweaks.registries.FirePitRegistry;
+import com.theprogrammingturkey.progressiontweaks.registries.FirePitRegistry.CookingResult;
 
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityXPOrb;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 
 public class TileFirePit extends TileEntity implements ITickable
 {
@@ -23,6 +34,18 @@ public class TileFirePit extends TileEntity implements ITickable
 	{
 		if(!this.worldObj.isRemote)
 		{
+			if(this.worldObj.isRaining())
+			{
+				if(this.burnTimeLeft > 0)
+				{
+					burnTimeLeft = -1;
+					cookTimeLeft = -1;
+					worldObj.playSound((double) ((float) pos.getX() + 0.5F), (double) ((float) pos.getY() + 0.5F), (double) ((float) pos.getZ() + 0.5F), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+					ProgressionPacketHandler.INSTANCE.sendToAll(new PacketUdateFirePit(getItemCooking(), getBurnTimeLeft(), getCookTimeLeft(), getPos().getX(), getPos().getY(), getPos().getZ()));
+				}
+				return;
+			}
+
 			if(burnTimeLeft > 0)
 			{
 				burnTimeLeft--;
@@ -42,10 +65,58 @@ public class TileFirePit extends TileEntity implements ITickable
 
 			if(cookTimeLeft == 0)
 			{
-				this.setCooking(FirePitRegistry.INSTANCE.getResultFromInput(cooking));
+				CookingResult result = FirePitRegistry.INSTANCE.getResultFromInput(cooking);
+				this.setCooking(result.getResult());
+				this.worldObj.spawnEntityInWorld(new EntityXPOrb(worldObj, this.pos.getX(), this.pos.getY(), this.pos.getZ(), result.getXp()));
 				cookTimeLeft = -1;
 				ProgressionPacketHandler.INSTANCE.sendToAll(new PacketUdateFirePit(getItemCooking(), getBurnTimeLeft(), getCookTimeLeft(), getPos().getX(), getPos().getY(), getPos().getZ()));
 			}
+
+			Scheduler.scheduleTask(new Task("Fire_Pit_Mob_Attract", -1, 200)
+			{
+				@Override
+				public void callback()
+				{
+
+				}
+
+				@Override
+				public void update()
+				{
+					if(worldObj == null)
+					{
+						Scheduler.removeTask(this);
+						return;
+					}
+
+					TileEntity tileentity = worldObj.getTileEntity(pos);
+					if(tileentity != null && tileentity.equals(TileFirePit.this))
+					{
+						EntityPlayer toAttack = null;
+						for(EntityPlayer player : worldObj.playerEntities)
+						{
+							if(player.getPosition().distanceSq(getPos()) < 10)
+							{
+								toAttack = player;
+								break;
+							}
+						}
+						if(toAttack != null)
+						{
+							int radius = ProgressionSettings.firePitAttractionRadius;
+							List<EntityMob> entities = worldObj.getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(getPos().add(radius, radius, radius), getPos().add(-radius, -radius, -radius)));
+							for(EntityMob ent : entities)
+								if(ent.getAttackTarget() == null)
+									ent.setAttackTarget(toAttack);
+						}
+					}
+					else
+					{
+						Scheduler.removeTask(this);
+					}
+				}
+
+			});
 		}
 	}
 
@@ -59,11 +130,11 @@ public class TileFirePit extends TileEntity implements ITickable
 		return this.cooking == null ? null : this.cooking.copy();
 	}
 
-	public void startCooking(ItemStack stack)
+	public void startCooking(ItemStack stack, int duration)
 	{
 		this.cooking = stack.copy();
 		this.cooking.func_190920_e(1);
-		this.cookTimeLeft = 200;
+		this.cookTimeLeft = duration;
 	}
 
 	public void setCooking(ItemStack stack)
