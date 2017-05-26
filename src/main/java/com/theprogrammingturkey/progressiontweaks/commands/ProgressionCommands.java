@@ -18,7 +18,6 @@ public class ProgressionCommands
 	{
 		BaseCommandHandler commandHandler = new BaseCommandHandler("ProgressionTweaks", true);
 		commandHandler.addCommandAliases("PTweaks", "ptweaks", "ProgTweaks", "progtweaks");
-
 		commandHandler.registerSubCommand("reload", new SimpleSubCommand("Refreshes the mod with any changes made in the mod's config", false)
 		{
 			@Override
