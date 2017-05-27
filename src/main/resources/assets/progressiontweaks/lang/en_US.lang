@@ -1,6 +1,7 @@
 itemGroup.progressiontweaks=Progression Tweaks
 
 tile.fire_pit_unlit.name=Fire Pit
+tile.fire_pit_lit.name=Fire Pit
 
 item.fire_pit_unlit.name=Fire Pit
 item.lime.name=Lime

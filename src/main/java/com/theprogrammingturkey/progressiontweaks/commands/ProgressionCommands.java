@@ -4,6 +4,7 @@ import com.theprogrammingturkey.gobblecore.commands.BaseCommandHandler;
 import com.theprogrammingturkey.gobblecore.commands.CommandManager;
 import com.theprogrammingturkey.gobblecore.commands.SimpleSubCommand;
 import com.theprogrammingturkey.gobblecore.config.ConfigErrorReporter;
+import com.theprogrammingturkey.progressiontweaks.ProgressionCore;
 import com.theprogrammingturkey.progressiontweaks.config.ProgressionConfigLoader;
 
 import net.minecraft.command.ICommandSender;
@@ -16,7 +17,7 @@ public class ProgressionCommands
 {
 	public static void loadCommands()
 	{
-		BaseCommandHandler commandHandler = new BaseCommandHandler("ProgressionTweaks", true);
+		BaseCommandHandler commandHandler = new BaseCommandHandler(ProgressionCore.instance, "ProgressionTweaks");
 		commandHandler.addCommandAliases("PTweaks", "ptweaks", "ProgTweaks", "progtweaks");
 
 		commandHandler.registerSubCommand("reload", new SimpleSubCommand("Refreshes the mod with any changes made in the mod's config", false)
