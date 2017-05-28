@@ -32,6 +32,7 @@ public class ItemSpear extends BaseItem
 	{
 		super("spear");
 		super.setMaxStackSize(1);
+		super.addLore("Deals +10 Damage to mobs smaller than a block");
 		this.addPropertyOverride(new ResourceLocation(ProgressionCore.MODID, "pull"), new IItemPropertyGetter()
 		{
 			@SideOnly(Side.CLIENT)

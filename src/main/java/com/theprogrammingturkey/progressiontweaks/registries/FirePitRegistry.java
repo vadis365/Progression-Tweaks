@@ -18,6 +18,12 @@ public class FirePitRegistry
 		cookingFuelRegistry.put(new ItemStack(Items.COAL), 10000);
 	}
 
+	public void clearRegistry()
+	{
+		cookingRegistry.clear();
+		cookingFuelRegistry.clear();
+	}
+
 	public void registerCookingRecipe(ItemStack input, ItemStack result, int duration, int xp)
 	{
 		cookingRegistry.put(input, new CookingResult(result, duration, xp));

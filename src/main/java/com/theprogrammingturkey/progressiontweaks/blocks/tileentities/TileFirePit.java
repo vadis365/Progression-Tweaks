@@ -29,12 +29,65 @@ public class TileFirePit extends TileEntity implements ITickable
 	private int burnTimeLeft = -1;
 	private int cookTimeLeft = -1;
 
+	public TileFirePit()
+	{
+		Scheduler.scheduleTask(new Task("Fire_Pit_Mob_Attract", -1, 20)
+		{
+			@Override
+			public void callback()
+			{
+
+			}
+
+			@Override
+			public void update()
+			{
+				if(!worldObj.isRemote)
+				{
+					System.out.println("Second" + burnTimeLeft);
+					if(worldObj == null)
+					{
+						Scheduler.removeTask(this);
+						return;
+					}
+
+					TileEntity tileentity = worldObj.getTileEntity(pos);
+					if(tileentity != null && tileentity.equals(TileFirePit.this))
+					{
+						EntityPlayer toAttack = null;
+						for(EntityPlayer player : worldObj.playerEntities)
+						{
+							if(player.getPosition().distanceSq(getPos()) < 10)
+							{
+								toAttack = player;
+								break;
+							}
+						}
+						if(toAttack != null)
+						{
+							int radius = ProgressionSettings.firePitAttractionRadius;
+							List<EntityMob> entities = worldObj.getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(getPos().add(radius, radius, radius), getPos().add(-radius, -radius, -radius)));
+							for(EntityMob ent : entities)
+								if(ent.getAttackTarget() == null)
+									ent.setAttackTarget(toAttack);
+						}
+					}
+					else
+					{
+						Scheduler.removeTask(this);
+					}
+				}
+			}
+
+		});
+	}
+
 	@Override
 	public void update()
 	{
 		if(!this.worldObj.isRemote)
 		{
-			if(this.worldObj.isRaining())
+			if(this.worldObj.isRainingAt(pos.add(0, 1, 0)))
 			{
 				if(this.burnTimeLeft > 0)
 				{
@@ -79,52 +132,6 @@ public class TileFirePit extends TileEntity implements ITickable
 					ProgressionPacketHandler.INSTANCE.sendToAll(new PacketUdateFirePit(getItemCooking(), getBurnTimeLeft(), getCookTimeLeft(), getPos().getX(), getPos().getY(), getPos().getZ()));
 				}
 			}
-
-			Scheduler.scheduleTask(new Task("Fire_Pit_Mob_Attract", -1, 200)
-			{
-				@Override
-				public void callback()
-				{
-
-				}
-
-				@Override
-				public void update()
-				{
-					if(worldObj == null)
-					{
-						Scheduler.removeTask(this);
-						return;
-					}
-
-					TileEntity tileentity = worldObj.getTileEntity(pos);
-					if(tileentity != null && tileentity.equals(TileFirePit.this))
-					{
-						EntityPlayer toAttack = null;
-						for(EntityPlayer player : worldObj.playerEntities)
-						{
-							if(player.getPosition().distanceSq(getPos()) < 10)
-							{
-								toAttack = player;
-								break;
-							}
-						}
-						if(toAttack != null)
-						{
-							int radius = ProgressionSettings.firePitAttractionRadius;
-							List<EntityMob> entities = worldObj.getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(getPos().add(radius, radius, radius), getPos().add(-radius, -radius, -radius)));
-							for(EntityMob ent : entities)
-								if(ent.getAttackTarget() == null)
-									ent.setAttackTarget(toAttack);
-						}
-					}
-					else
-					{
-						Scheduler.removeTask(this);
-					}
-				}
-
-			});
 		}
 	}
 

@@ -31,6 +31,8 @@ public class ProgressionConfigLoader
 		config.load();
 		config.setCategoryComment(firePitCat, "Fire Pit Settings");
 
+		FirePitRegistry.INSTANCE.clearRegistry();
+
 		String[] recipes = config.getStringList("Recipes", firePitCat, new String[0], "Recipes for the fire pit to be able to cook. Format, things in () are optional -> \"ModID:ItemName(:meta)-ModID:ItemName(:meta)-duration-xp\" With the first item being the input and the second being the cooked output.");
 		for(String s : recipes)
 		{

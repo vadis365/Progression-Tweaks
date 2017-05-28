@@ -353,8 +353,10 @@ public class EntitySpear extends Entity implements IProjectile
 
 		if(entity != null)
 		{
-			float f = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
-			int i = MathHelper.ceiling_double_int((double) f * this.damage);
+			if(entity.width <= 1f && entity.height <= 1f)
+			{
+				damage = 10;
+			}
 
 			DamageSource damagesource;
 
@@ -372,7 +374,7 @@ public class EntitySpear extends Entity implements IProjectile
 				entity.setFire(5);
 			}
 
-			if(entity.attackEntityFrom(damagesource, (float) i))
+			if(entity.attackEntityFrom(damagesource, (float) damage))
 			{
 				if(entity instanceof EntityLivingBase)
 				{
