@@ -104,7 +104,8 @@ public class BlockFirePit extends BaseBlock implements ITileEntityProvider
 
 	public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn)
 	{
-		entityIn.setFire(5);
+		if(lit)
+			entityIn.setFire(5);
 		super.onEntityWalk(worldIn, pos, entityIn);
 	}
 

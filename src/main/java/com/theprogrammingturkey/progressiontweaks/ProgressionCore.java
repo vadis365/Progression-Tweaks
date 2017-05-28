@@ -10,12 +10,15 @@ import com.theprogrammingturkey.gobblecore.proxy.IBaseProxy;
 import com.theprogrammingturkey.progressiontweaks.blocks.ProgressionBlocks;
 import com.theprogrammingturkey.progressiontweaks.commands.ProgressionCommands;
 import com.theprogrammingturkey.progressiontweaks.config.ProgressionConfigLoader;
+import com.theprogrammingturkey.progressiontweaks.entity.EntitySpear;
 import com.theprogrammingturkey.progressiontweaks.items.ProgressionItems;
 import com.theprogrammingturkey.progressiontweaks.network.ProgressionPacketHandler;
 import com.theprogrammingturkey.progressiontweaks.util.ProgressionAchievements;
+import com.theprogrammingturkey.progressiontweaks.util.ProgressionCrafting;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -23,6 +26,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 @Mod(modid = ProgressionCore.MODID, version = ProgressionCore.VERSION, name = ProgressionCore.NAME, dependencies = "after:gobblecore[0.1.3.16,)")
 public class ProgressionCore implements IModCore
@@ -66,7 +70,9 @@ public class ProgressionCore implements IModCore
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
+		EntityRegistry.registerModEntity(new ResourceLocation(MODID), EntitySpear.class, "spear", 0, this, 120, 1, true);
 
+		ProgressionCrafting.initCrafting();
 	}
 
 	@EventHandler

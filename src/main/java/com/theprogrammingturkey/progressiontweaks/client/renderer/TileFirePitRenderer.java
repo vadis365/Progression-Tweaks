@@ -1,4 +1,4 @@
-package com.theprogrammingturkey.progressiontweaks.renderer;
+package com.theprogrammingturkey.progressiontweaks.client.renderer;
 
 import com.theprogrammingturkey.progressiontweaks.blocks.ProgressionBlocks;
 import com.theprogrammingturkey.progressiontweaks.blocks.tileentities.TileFirePit;

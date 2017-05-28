@@ -17,6 +17,8 @@ public class ProgressionConfigLoader
 
 	public static final String firePitCat = "Firepit Settings";
 
+	public static final String itemCat = "Item Settings";
+
 	public static void loadConfigSettings(File file)
 	{
 		config = new Configuration(file);
@@ -67,6 +69,8 @@ public class ProgressionConfigLoader
 		}
 
 		ProgressionSettings.firePitAttractionRadius = config.getInt("Attraction Radius", firePitCat, 16, 1, 100, "Attraction radius for the fire pit to make the mobs attact to. Square radius from corner to center.");
+
+		ProgressionSettings.SpearBreakChance = config.getInt("Spear Break Chance", itemCat, 15, 0, Integer.MAX_VALUE, "Chance of a thrown spear to break. 1 in x chance. Set to 0 for never.");
 
 		config.save();
 	}

@@ -12,9 +12,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class Lime extends ItemFood
+public class ItemLime extends ItemFood
 {
-	public Lime()
+	public ItemLime()
 	{
 		super(1, 0.2f, false);
 		this.setMaxStackSize(16);
