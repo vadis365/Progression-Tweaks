@@ -71,10 +71,13 @@ public class TileFirePit extends TileEntity implements ITickable
 			if(cookTimeLeft == 0)
 			{
 				CookingResult result = FirePitRegistry.INSTANCE.getResultFromInput(cooking);
-				this.setCooking(result.getResult());
-				this.worldObj.spawnEntityInWorld(new EntityXPOrb(worldObj, this.pos.getX(), this.pos.getY(), this.pos.getZ(), result.getXp()));
-				cookTimeLeft = -1;
-				ProgressionPacketHandler.INSTANCE.sendToAll(new PacketUdateFirePit(getItemCooking(), getBurnTimeLeft(), getCookTimeLeft(), getPos().getX(), getPos().getY(), getPos().getZ()));
+				if(result != null)
+				{
+					this.setCooking(result.getResult());
+					this.worldObj.spawnEntityInWorld(new EntityXPOrb(worldObj, this.pos.getX(), this.pos.getY(), this.pos.getZ(), result.getXp()));
+					cookTimeLeft = -1;
+					ProgressionPacketHandler.INSTANCE.sendToAll(new PacketUdateFirePit(getItemCooking(), getBurnTimeLeft(), getCookTimeLeft(), getPos().getX(), getPos().getY(), getPos().getZ()));
+				}
 			}
 
 			Scheduler.scheduleTask(new Task("Fire_Pit_Mob_Attract", -1, 200)

@@ -63,7 +63,7 @@ public class BlockFirePit extends BaseBlock implements ITileEntityProvider
 			ItemStack heldItem = player.getHeldItem(hand);
 			boolean flag = false;
 			CookingResult result = FirePitRegistry.INSTANCE.getResultFromInput(heldItem);
-			if(result != null)
+			if(result != null && te.getItemCooking() == null)
 			{
 				ItemStack output = result.getResult();
 				int burntime = result.getDuration();
@@ -78,7 +78,7 @@ public class BlockFirePit extends BaseBlock implements ITileEntityProvider
 			else
 			{
 				int burntime = FirePitRegistry.INSTANCE.getBurnTimeFromFuel(heldItem);
-				if(burntime != -1 && !te.isCooking())
+				if(burntime != -1)
 				{
 					te.startBurnTime(burntime);
 					player.inventory.decrStackSize(player.inventory.currentItem, 1);
