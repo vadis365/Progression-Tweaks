@@ -2,12 +2,13 @@ package com.theprogrammingturkey.progressiontweaks.blocks.tileentities;
 
 import java.util.List;
 
+import com.theprogrammingturkey.gobblecore.network.NetworkManager;
 import com.theprogrammingturkey.gobblecore.util.Scheduler;
 import com.theprogrammingturkey.gobblecore.util.Task;
+import com.theprogrammingturkey.progressiontweaks.ProgressionCore;
 import com.theprogrammingturkey.progressiontweaks.blocks.ProgressionBlocks;
 import com.theprogrammingturkey.progressiontweaks.config.ProgressionSettings;
 import com.theprogrammingturkey.progressiontweaks.network.PacketUdateFirePit;
-import com.theprogrammingturkey.progressiontweaks.network.ProgressionPacketHandler;
 import com.theprogrammingturkey.progressiontweaks.registries.FirePitRegistry;
 import com.theprogrammingturkey.progressiontweaks.registries.FirePitRegistry.CookingResult;
 
@@ -44,7 +45,6 @@ public class TileFirePit extends TileEntity implements ITickable
 			{
 				if(!worldObj.isRemote)
 				{
-					System.out.println("Second" + burnTimeLeft);
 					if(worldObj == null)
 					{
 						Scheduler.removeTask(this);
@@ -99,7 +99,7 @@ public class TileFirePit extends TileEntity implements ITickable
 					tileentity.validate();
 					this.worldObj.setTileEntity(pos, tileentity);
 					worldObj.playSound((double) ((float) pos.getX() + 0.5F), (double) ((float) pos.getY() + 0.5F), (double) ((float) pos.getZ() + 0.5F), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
-					ProgressionPacketHandler.INSTANCE.sendToAll(new PacketUdateFirePit(getItemCooking(), getBurnTimeLeft(), getCookTimeLeft(), getPos().getX(), getPos().getY(), getPos().getZ()));
+					NetworkManager.getSimpleNetwork(ProgressionCore.instance).sendToAll(new PacketUdateFirePit(getItemCooking(), getBurnTimeLeft(), getCookTimeLeft(), getPos().getX(), getPos().getY(), getPos().getZ()));
 				}
 				return;
 			}
@@ -119,7 +119,7 @@ public class TileFirePit extends TileEntity implements ITickable
 				tileentity.validate();
 				this.worldObj.setTileEntity(pos, tileentity);
 				burnTimeLeft = -1;
-				ProgressionPacketHandler.INSTANCE.sendToAll(new PacketUdateFirePit(getItemCooking(), getBurnTimeLeft(), getCookTimeLeft(), getPos().getX(), getPos().getY(), getPos().getZ()));
+				NetworkManager.getSimpleNetwork(ProgressionCore.instance).sendToAll(new PacketUdateFirePit(getItemCooking(), getBurnTimeLeft(), getCookTimeLeft(), getPos().getX(), getPos().getY(), getPos().getZ()));
 			}
 
 			if(cookTimeLeft == 0)
@@ -130,7 +130,7 @@ public class TileFirePit extends TileEntity implements ITickable
 					this.setCooking(result.getResult());
 					this.worldObj.spawnEntityInWorld(new EntityXPOrb(worldObj, this.pos.getX(), this.pos.getY(), this.pos.getZ(), result.getXp()));
 					cookTimeLeft = -1;
-					ProgressionPacketHandler.INSTANCE.sendToAll(new PacketUdateFirePit(getItemCooking(), getBurnTimeLeft(), getCookTimeLeft(), getPos().getX(), getPos().getY(), getPos().getZ()));
+					NetworkManager.getSimpleNetwork(ProgressionCore.instance).sendToAll(new PacketUdateFirePit(getItemCooking(), getBurnTimeLeft(), getCookTimeLeft(), getPos().getX(), getPos().getY(), getPos().getZ()));
 				}
 			}
 		}
@@ -174,7 +174,7 @@ public class TileFirePit extends TileEntity implements ITickable
 		this.worldObj.setBlockState(pos, ProgressionBlocks.FIRE_PIT_LIT.getDefaultState());
 		tileentity.validate();
 		this.worldObj.setTileEntity(pos, tileentity);
-		ProgressionPacketHandler.INSTANCE.sendToAll(new PacketUdateFirePit(getItemCooking(), getBurnTimeLeft(), getCookTimeLeft(), getPos().getX(), getPos().getY(), getPos().getZ()));
+		NetworkManager.getSimpleNetwork(ProgressionCore.instance).sendToAll(new PacketUdateFirePit(getItemCooking(), getBurnTimeLeft(), getCookTimeLeft(), getPos().getX(), getPos().getY(), getPos().getZ()));
 	}
 
 	public void setBurnTimeLeft(int burnTime)

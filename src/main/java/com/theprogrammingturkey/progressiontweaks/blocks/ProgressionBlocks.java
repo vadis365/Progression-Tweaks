@@ -31,7 +31,7 @@ public class ProgressionBlocks implements IBlockHandler
 	public void registerModels(BlockLoader loader)
 	{
 		ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-		
+
 		loader.registerBlockModel(mesher, FIRE_PIT_UNLIT, 0, FIRE_PIT_UNLIT.getBlockName());
 	}
 

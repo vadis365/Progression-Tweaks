@@ -4,21 +4,22 @@ import org.apache.logging.log4j.Logger;
 
 import com.theprogrammingturkey.gobblecore.IModCore;
 import com.theprogrammingturkey.gobblecore.blocks.BlockManager;
+import com.theprogrammingturkey.gobblecore.entity.EntityManager;
 import com.theprogrammingturkey.gobblecore.items.ItemManager;
-import com.theprogrammingturkey.gobblecore.managers.ProxyManager;
+import com.theprogrammingturkey.gobblecore.network.NetworkManager;
 import com.theprogrammingturkey.gobblecore.proxy.IBaseProxy;
+import com.theprogrammingturkey.gobblecore.proxy.ProxyManager;
 import com.theprogrammingturkey.progressiontweaks.blocks.ProgressionBlocks;
 import com.theprogrammingturkey.progressiontweaks.commands.ProgressionCommands;
 import com.theprogrammingturkey.progressiontweaks.config.ProgressionConfigLoader;
-import com.theprogrammingturkey.progressiontweaks.entity.EntitySpear;
+import com.theprogrammingturkey.progressiontweaks.entity.ProgressionEntities;
 import com.theprogrammingturkey.progressiontweaks.items.ProgressionItems;
-import com.theprogrammingturkey.progressiontweaks.network.ProgressionPacketHandler;
+import com.theprogrammingturkey.progressiontweaks.network.ProgressionPackets;
 import com.theprogrammingturkey.progressiontweaks.util.ProgressionAchievements;
 import com.theprogrammingturkey.progressiontweaks.util.ProgressionCrafting;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -26,9 +27,8 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
 
-@Mod(modid = ProgressionCore.MODID, version = ProgressionCore.VERSION, name = ProgressionCore.NAME, dependencies = "after:gobblecore[0.1.3.16,)")
+@Mod(modid = ProgressionCore.MODID, version = ProgressionCore.VERSION, name = ProgressionCore.NAME, dependencies = "after:gobblecore[0.1.4.22,)")
 public class ProgressionCore implements IModCore
 {
 	public static final String MODID = "progressiontweaks";
@@ -51,18 +51,21 @@ public class ProgressionCore implements IModCore
 
 	public static Logger logger;
 
+	public ProgressionCore()
+	{
+		BlockManager.registerBlockHandler(new ProgressionBlocks(), this);
+		ItemManager.registerItemHandler(new ProgressionItems(), this);
+		EntityManager.registerEntityHandler(new ProgressionEntities(), this);
+		NetworkManager.registerNetworkHandler(new ProgressionPackets(), this);
+	}
+
 	@EventHandler
 	public void load(FMLPreInitializationEvent event)
 	{
 		logger = event.getModLog();
 		ProgressionConfigLoader.loadConfigSettings(event.getSuggestedConfigurationFile());
 
-		BlockManager.registerBlockHandler(new ProgressionBlocks(), this);
-		ItemManager.registerItemHandler(new ProgressionItems(), this);
-
 		ProxyManager.registerModProxy(proxy);
-
-		ProgressionPacketHandler.init();
 
 		ProgressionCommands.loadCommands();
 	}
@@ -70,14 +73,13 @@ public class ProgressionCore implements IModCore
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		EntityRegistry.registerModEntity(new ResourceLocation(MODID, "spear"), EntitySpear.class, "spear", 0, this, 120, 1, true);
-
 		ProgressionCrafting.initCrafting();
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
+		ProgressionConfigLoader.loadFromConfig();
 		ProgressionAchievements.loadAchievements();
 	}
 

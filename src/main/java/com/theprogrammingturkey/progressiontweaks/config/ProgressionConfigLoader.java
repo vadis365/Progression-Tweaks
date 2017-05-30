@@ -22,8 +22,6 @@ public class ProgressionConfigLoader
 	public static void loadConfigSettings(File file)
 	{
 		config = new Configuration(file);
-
-		loadFromConfig();
 	}
 
 	public static void loadFromConfig()

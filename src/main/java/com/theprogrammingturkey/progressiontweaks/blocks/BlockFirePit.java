@@ -3,9 +3,10 @@ package com.theprogrammingturkey.progressiontweaks.blocks;
 import java.util.Random;
 
 import com.theprogrammingturkey.gobblecore.blocks.BaseBlock;
+import com.theprogrammingturkey.gobblecore.network.NetworkManager;
+import com.theprogrammingturkey.progressiontweaks.ProgressionCore;
 import com.theprogrammingturkey.progressiontweaks.blocks.tileentities.TileFirePit;
 import com.theprogrammingturkey.progressiontweaks.network.PacketUdateFirePit;
-import com.theprogrammingturkey.progressiontweaks.network.ProgressionPacketHandler;
 import com.theprogrammingturkey.progressiontweaks.registries.FirePitRegistry;
 import com.theprogrammingturkey.progressiontweaks.registries.FirePitRegistry.CookingResult;
 
@@ -13,8 +14,6 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -96,7 +95,7 @@ public class BlockFirePit extends BaseBlock implements ITileEntityProvider
 
 			if(flag)
 			{
-				ProgressionPacketHandler.INSTANCE.sendToAll(new PacketUdateFirePit(te.getItemCooking(), te.getBurnTimeLeft(), te.getCookTimeLeft(), te.getPos().getX(), te.getPos().getY(), te.getPos().getZ()));
+				NetworkManager.getSimpleNetwork(ProgressionCore.instance).sendToAll(new PacketUdateFirePit(te.getItemCooking(), te.getBurnTimeLeft(), te.getCookTimeLeft(), te.getPos().getX(), te.getPos().getY(), te.getPos().getZ()));
 				return true;
 			}
 		}
