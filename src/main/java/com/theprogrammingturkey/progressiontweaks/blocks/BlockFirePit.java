@@ -13,6 +13,8 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -138,5 +140,10 @@ public class BlockFirePit extends BaseBlock implements ITileEntityProvider
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
 		return Item.getItemFromBlock(ProgressionBlocks.FIRE_PIT_UNLIT);
+	}
+
+	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
+	{
+		return new ItemStack(ProgressionBlocks.FIRE_PIT_UNLIT);
 	}
 }

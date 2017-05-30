@@ -70,7 +70,7 @@ public class ProgressionCore implements IModCore
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		EntityRegistry.registerModEntity(new ResourceLocation(MODID), EntitySpear.class, "spear", 0, this, 120, 1, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(MODID, "spear"), EntitySpear.class, "spear", 0, this, 120, 1, true);
 
 		ProgressionCrafting.initCrafting();
 	}

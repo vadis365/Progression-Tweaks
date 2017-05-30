@@ -353,7 +353,7 @@ public class EntitySpear extends Entity implements IProjectile
 
 		if(entity != null)
 		{
-			if(entity.width <= 1f && entity.height <= 1f)
+			if(entity.width <= 0.75f && entity.height <= 0.75f)
 			{
 				damage = 10;
 			}
@@ -433,7 +433,8 @@ public class EntitySpear extends Entity implements IProjectile
 			this.posX -= this.motionX / (double) f2 * 0.05000000074505806D;
 			this.posY -= this.motionY / (double) f2 * 0.05000000074505806D;
 			this.posZ -= this.motionZ / (double) f2 * 0.05000000074505806D;
-			this.playSound(SoundEvents.ENTITY_ARROW_HIT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
+			this.playSound(SoundEvents.ENTITY_ARROW_HIT, 0.5F, 0.5F);
+			this.playSound(iblockstate.getBlock().getSoundType(iblockstate, worldObj, blockpos, null).getBreakSound(), 1.5F, 1.5F);
 			this.inGround = true;
 			this.arrowShake = 7;
 

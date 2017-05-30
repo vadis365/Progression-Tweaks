@@ -119,6 +119,7 @@ public class TileFirePit extends TileEntity implements ITickable
 				tileentity.validate();
 				this.worldObj.setTileEntity(pos, tileentity);
 				burnTimeLeft = -1;
+				ProgressionPacketHandler.INSTANCE.sendToAll(new PacketUdateFirePit(getItemCooking(), getBurnTimeLeft(), getCookTimeLeft(), getPos().getX(), getPos().getY(), getPos().getZ()));
 			}
 
 			if(cookTimeLeft == 0)
@@ -173,6 +174,7 @@ public class TileFirePit extends TileEntity implements ITickable
 		this.worldObj.setBlockState(pos, ProgressionBlocks.FIRE_PIT_LIT.getDefaultState());
 		tileentity.validate();
 		this.worldObj.setTileEntity(pos, tileentity);
+		ProgressionPacketHandler.INSTANCE.sendToAll(new PacketUdateFirePit(getItemCooking(), getBurnTimeLeft(), getCookTimeLeft(), getPos().getX(), getPos().getY(), getPos().getZ()));
 	}
 
 	public void setBurnTimeLeft(int burnTime)
