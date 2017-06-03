@@ -1,6 +1,0 @@
-{
-    "parent": "item/spear",
-    "textures": {
-        "layer0": "items/spear_pulling_1"
-    }
-}

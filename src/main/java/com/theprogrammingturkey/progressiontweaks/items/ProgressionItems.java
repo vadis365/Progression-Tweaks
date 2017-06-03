@@ -15,6 +15,9 @@ public class ProgressionItems implements IItemHandler
 	public static BaseItem SPEAR;
 	public static BaseItem BROKEN_SPEAR_TIP;
 	public static BaseItem BROKEN_SPEAR_SHAFT;
+	public static BaseItem TOMAHAWK;
+	public static Item STONE_HAMMER;
+	public static Item FLAT_BREAD;
 
 	@Override
 	public void registerItems(ItemLoader loader)
@@ -26,6 +29,9 @@ public class ProgressionItems implements IItemHandler
 		loader.registerItem(SPEAR = new ItemSpear(), SPEAR.getItemName());
 		loader.registerItem(BROKEN_SPEAR_TIP = new ItemBrokenSpear("tip"), BROKEN_SPEAR_TIP.getItemName());
 		loader.registerItem(BROKEN_SPEAR_SHAFT = new ItemBrokenSpear("shaft"), BROKEN_SPEAR_SHAFT.getItemName());
+		loader.registerItem(TOMAHAWK = new ItemTomahawk(), TOMAHAWK.getItemName());
+		loader.registerItem(STONE_HAMMER = new ItemStoneHammer(), "stone_hammer");
+		loader.registerItem(FLAT_BREAD = new ItemFlatBread(), "flat_bread");
 	}
 
 	@Override
@@ -36,6 +42,9 @@ public class ProgressionItems implements IItemHandler
 		loader.registerItemModel(mesher, SPEAR, 0, SPEAR.getItemName());
 		loader.registerItemModel(mesher, BROKEN_SPEAR_TIP, 0, BROKEN_SPEAR_TIP.getItemName());
 		loader.registerItemModel(mesher, BROKEN_SPEAR_SHAFT, 0, BROKEN_SPEAR_SHAFT.getItemName());
+		loader.registerItemModel(mesher, TOMAHAWK, 0, TOMAHAWK.getItemName());
+		loader.registerItemModel(mesher, STONE_HAMMER, 0, "stone_hammer");
+		loader.registerItemModel(mesher, FLAT_BREAD, 0, "flat_bread");
 	}
 
 }

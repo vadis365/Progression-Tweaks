@@ -74,6 +74,7 @@ publishing {
     tasks.publish.dependsOn 'build'
     publications {
         mavenJava(MavenPublication) {
+        	artifactId 'ProgressionTweaks'
             from components.java
 
             artifact sourceJar

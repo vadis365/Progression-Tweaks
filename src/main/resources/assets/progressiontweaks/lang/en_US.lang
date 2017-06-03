@@ -8,6 +8,9 @@ item.lime.name=Lime
 item.spear.name=Spear
 item.broken_spear_tip.name=Broken Spear (Tip)
 item.broken_spear_shaft.name=Broken Spear (Shaft)
+item.tomahawk.name=Tomahawk
+item.stone_hammer.name=Stone Hammer
+item.flat_bread.name=Flat Bread
 
 achievement.progressiontweaks.toTheCore= To The Core!
 achievement.progressiontweaks.toTheCore.desc= Eat a Green Taco (Lime)
