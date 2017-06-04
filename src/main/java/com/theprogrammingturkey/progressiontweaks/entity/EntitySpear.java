@@ -16,19 +16,16 @@ public class EntitySpear extends EntityCustomThrowable
 	public EntitySpear(World worldIn)
 	{
 		super(worldIn);
-		this.setDamage(4);
+	}
+
+	public EntitySpear(World worldIn, EntityLivingBase throwerIn)
+	{
+		super(worldIn, throwerIn);
 	}
 
 	public EntitySpear(World worldIn, double x, double y, double z)
 	{
-		this(worldIn);
-		this.setDamage(4);
-	}
-
-	public EntitySpear(World worldIn, EntityLivingBase shooter)
-	{
-		super(worldIn, shooter.posX, shooter.posY + (double) shooter.getEyeHeight() - 0.10000000149011612D, shooter.posZ);
-		this.setDamage(4);
+		super(worldIn, x, y, z);
 	}
 
 	@Override

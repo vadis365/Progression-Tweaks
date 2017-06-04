@@ -67,7 +67,7 @@ public abstract class EntityCustomThrowable extends Entity implements IProjectil
 		this.xTile = -1;
 		this.yTile = -1;
 		this.zTile = -1;
-		this.setSize(0.5F, 0.5F);
+		this.setSize(0.25F, 0.25F);
 	}
 
 	public EntityCustomThrowable(World worldIn, double x, double y, double z)
@@ -76,10 +76,10 @@ public abstract class EntityCustomThrowable extends Entity implements IProjectil
 		this.setPosition(x, y, z);
 	}
 
-	public EntityCustomThrowable(World worldIn, EntityLivingBase shooter)
+	public EntityCustomThrowable(World worldIn, EntityLivingBase throwerIn)
 	{
-		this(worldIn, shooter.posX, shooter.posY + (double) shooter.getEyeHeight() - 0.10000000149011612D, shooter.posZ);
-		this.shootingEntity = shooter;
+		this(worldIn, throwerIn.posX, throwerIn.posY + (double) throwerIn.getEyeHeight() - 0.10000000149011612D, throwerIn.posZ);
+		this.shootingEntity = throwerIn;
 	}
 
 	/**

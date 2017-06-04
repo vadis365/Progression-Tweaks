@@ -64,12 +64,7 @@ public class ItemSpear extends BaseItem
 					if(!worldIn.isRemote)
 					{
 						EntitySpear entitySpear = new EntitySpear(worldIn, entityplayer);
-						entitySpear.setAim(entityplayer, entityplayer.rotationPitch, entityplayer.rotationYaw, 0.0F, f * 3.0F, 1.0F);
-
-						if(EnchantmentHelper.getEnchantmentLevel(Enchantments.FLAME, stack) > 0)
-						{
-							entitySpear.setFire(100);
-						}
+						entitySpear.setAim(entityplayer, entityplayer.rotationPitch, entityplayer.rotationYaw, 1.0F, f * 3.0F, 1.0F);
 
 						stack.damageItem(1, entityplayer);
 

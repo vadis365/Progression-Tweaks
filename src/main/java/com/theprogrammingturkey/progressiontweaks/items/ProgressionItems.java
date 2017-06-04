@@ -18,6 +18,7 @@ public class ProgressionItems implements IItemHandler
 	public static BaseItem TOMAHAWK;
 	public static Item STONE_HAMMER;
 	public static Item FLAT_BREAD;
+	public static BaseItem UNFIRED_CLAY_BOWL;
 
 	@Override
 	public void registerItems(ItemLoader loader)
@@ -32,6 +33,7 @@ public class ProgressionItems implements IItemHandler
 		loader.registerItem(TOMAHAWK = new ItemTomahawk(), TOMAHAWK.getItemName());
 		loader.registerItem(STONE_HAMMER = new ItemStoneHammer(), "stone_hammer");
 		loader.registerItem(FLAT_BREAD = new ItemFlatBread(), "flat_bread");
+		loader.registerItem(UNFIRED_CLAY_BOWL = new BaseItem("unfired_clay_bowl"), UNFIRED_CLAY_BOWL.getItemName());
 	}
 
 	@Override
@@ -45,6 +47,7 @@ public class ProgressionItems implements IItemHandler
 		loader.registerItemModel(mesher, TOMAHAWK, 0, TOMAHAWK.getItemName());
 		loader.registerItemModel(mesher, STONE_HAMMER, 0, "stone_hammer");
 		loader.registerItemModel(mesher, FLAT_BREAD, 0, "flat_bread");
+		loader.registerItemModel(mesher, UNFIRED_CLAY_BOWL, 0, UNFIRED_CLAY_BOWL.getItemName());
 	}
 
 }
