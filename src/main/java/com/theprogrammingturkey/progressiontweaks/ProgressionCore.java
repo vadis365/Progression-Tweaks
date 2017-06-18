@@ -2,10 +2,13 @@ package com.theprogrammingturkey.progressiontweaks;
 
 import org.apache.logging.log4j.Logger;
 
+import com.google.gson.JsonElement;
 import com.theprogrammingturkey.gobblecore.IModCore;
 import com.theprogrammingturkey.gobblecore.blocks.BlockManager;
 import com.theprogrammingturkey.gobblecore.entity.EntityManager;
 import com.theprogrammingturkey.gobblecore.items.ItemManager;
+import com.theprogrammingturkey.gobblecore.managers.WebHookManager;
+import com.theprogrammingturkey.gobblecore.managers.WebHookManager.ModWebHook;
 import com.theprogrammingturkey.gobblecore.network.NetworkManager;
 import com.theprogrammingturkey.gobblecore.proxy.IBaseProxy;
 import com.theprogrammingturkey.gobblecore.proxy.ProxyManager;
@@ -28,7 +31,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = ProgressionCore.MODID, version = ProgressionCore.VERSION, name = ProgressionCore.NAME, dependencies = "after:gobblecore[0.1.4.2,)")
+@Mod(modid = ProgressionCore.MODID, version = ProgressionCore.VERSION, name = ProgressionCore.NAME, dependencies = "after:gobblecore[0.1.4.18,)")
 public class ProgressionCore implements IModCore
 {
 	public static final String MODID = "progressiontweaks";
@@ -74,6 +77,15 @@ public class ProgressionCore implements IModCore
 	public void init(FMLInitializationEvent event)
 	{
 		ProgressionCrafting.initCrafting();
+
+		WebHookManager.registerHook(new ModWebHook(this)
+		{
+			@Override
+			public void onResponse(JsonElement json)
+			{
+
+			}
+		});
 	}
 
 	@EventHandler

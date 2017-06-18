@@ -8,7 +8,6 @@ import com.theprogrammingturkey.progressiontweaks.blocks.tileentities.TileFirePi
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ProgressionBlocks implements IBlockHandler
 {
@@ -18,13 +17,11 @@ public class ProgressionBlocks implements IBlockHandler
 	@Override
 	public void registerBlocks(BlockLoader loader)
 	{
+		loader.registerBlock(FIRE_PIT_LIT = new BlockFirePit(true));
+
 		loader.setCreativeTab(ProgressionCore.modTab);
 
-		loader.registerBlock(FIRE_PIT_LIT = new BlockFirePit(true), FIRE_PIT_LIT.getBlockName());
-		FIRE_PIT_LIT.setCreativeTab(null);
-		loader.registerBlock(FIRE_PIT_UNLIT = new BlockFirePit(false), FIRE_PIT_UNLIT.getBlockName());
-
-		GameRegistry.registerTileEntity(TileFirePit.class, "tile_fire_pit");
+		loader.registerBlock(FIRE_PIT_UNLIT = new BlockFirePit(false), TileFirePit.class);
 	}
 
 	@Override
@@ -32,7 +29,7 @@ public class ProgressionBlocks implements IBlockHandler
 	{
 		ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
 
-		loader.registerBlockModel(mesher, FIRE_PIT_UNLIT, 0, FIRE_PIT_UNLIT.getBlockName());
+		loader.registerBlockModel(mesher, FIRE_PIT_UNLIT, 0);
 	}
 
 }
