@@ -13,6 +13,7 @@ public class ProgressionBlocks implements IBlockHandler
 {
 	public static BaseBlock FIRE_PIT_LIT;
 	public static BaseBlock FIRE_PIT_UNLIT;
+	public static BaseBlock BLANK_TELEPORTER;
 
 	@Override
 	public void registerBlocks(BlockLoader loader)
@@ -22,6 +23,7 @@ public class ProgressionBlocks implements IBlockHandler
 		loader.setCreativeTab(ProgressionCore.modTab);
 
 		loader.registerBlock(FIRE_PIT_UNLIT = new BlockFirePit(false), TileFirePit.class);
+		loader.registerBlock(BLANK_TELEPORTER = new BaseBlock("blank_teleporter"));
 	}
 
 	@Override
@@ -30,6 +32,7 @@ public class ProgressionBlocks implements IBlockHandler
 		ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
 
 		loader.registerBlockModel(mesher, FIRE_PIT_UNLIT, 0);
+		loader.registerBlockModel(mesher, BLANK_TELEPORTER, 0);
 	}
 
 }
