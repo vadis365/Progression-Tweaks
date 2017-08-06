@@ -124,7 +124,7 @@ public abstract class EntityCustomThrowable extends Entity implements IProjectil
 	 */
 	public void setThrowableHeading(double x, double y, double z, float velocity, float inaccuracy)
 	{
-		float f = MathHelper.sqrt_double(x * x + y * y + z * z);
+		float f = MathHelper.sqrt(x * x + y * y + z * z);
 		x = x / (double) f;
 		y = y / (double) f;
 		z = z / (double) f;
@@ -137,7 +137,7 @@ public abstract class EntityCustomThrowable extends Entity implements IProjectil
 		this.motionX = x;
 		this.motionY = y;
 		this.motionZ = z;
-		float f1 = MathHelper.sqrt_double(x * x + z * z);
+		float f1 = MathHelper.sqrt(x * x + z * z);
 		this.rotationYaw = (float) (MathHelper.atan2(x, z) * (180D / Math.PI));
 		this.rotationPitch = (float) (MathHelper.atan2(y, (double) f1) * (180D / Math.PI));
 		this.prevRotationYaw = this.rotationYaw;
@@ -167,7 +167,7 @@ public abstract class EntityCustomThrowable extends Entity implements IProjectil
 
 		if(this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F)
 		{
-			float f = MathHelper.sqrt_double(x * x + z * z);
+			float f = MathHelper.sqrt(x * x + z * z);
 			this.rotationPitch = (float) (MathHelper.atan2(y, (double) f) * (180D / Math.PI));
 			this.rotationYaw = (float) (MathHelper.atan2(x, z) * (180D / Math.PI));
 			this.prevRotationPitch = this.rotationPitch;
@@ -192,7 +192,7 @@ public abstract class EntityCustomThrowable extends Entity implements IProjectil
 
 		if(this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F)
 		{
-			float f = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
+			float f = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
 			this.rotationYaw = (float) (MathHelper.atan2(this.motionX, this.motionZ) * (180D / Math.PI));
 			this.rotationPitch = (float) (MathHelper.atan2(this.motionY, (double) f) * (180D / Math.PI));
 			this.prevRotationYaw = this.rotationYaw;
@@ -200,14 +200,14 @@ public abstract class EntityCustomThrowable extends Entity implements IProjectil
 		}
 
 		BlockPos blockpos = new BlockPos(this.xTile, this.yTile, this.zTile);
-		IBlockState iblockstate = this.worldObj.getBlockState(blockpos);
+		IBlockState iblockstate = this.getEntityWorld().getBlockState(blockpos);
 		Block block = iblockstate.getBlock();
 
 		if(iblockstate.getMaterial() != Material.AIR)
 		{
-			AxisAlignedBB axisalignedbb = iblockstate.getCollisionBoundingBox(this.worldObj, blockpos);
+			AxisAlignedBB axisalignedbb = iblockstate.getCollisionBoundingBox(this.getEntityWorld(), blockpos);
 
-			if(axisalignedbb != Block.NULL_AABB && axisalignedbb.offset(blockpos).isVecInside(new Vec3d(this.posX, this.posY, this.posZ)))
+			if(axisalignedbb != Block.NULL_AABB && axisalignedbb.offset(blockpos).contains(new Vec3d(this.posX, this.posY, this.posZ)))
 			{
 				this.inGround = true;
 			}
@@ -222,7 +222,7 @@ public abstract class EntityCustomThrowable extends Entity implements IProjectil
 		{
 			int j = block.getMetaFromState(iblockstate);
 
-			if((block != this.inTile || j != this.inData) && !this.worldObj.collidesWithAnyBlock(this.getEntityBoundingBox().expandXyz(0.05D)))
+			if((block != this.inTile || j != this.inData) && !this.getEntityWorld().collidesWithAnyBlock(this.getEntityBoundingBox().grow(0.05D)))
 			{
 				this.inGround = false;
 				this.motionX *= (double) (this.rand.nextFloat() * 0.2F);
@@ -249,13 +249,13 @@ public abstract class EntityCustomThrowable extends Entity implements IProjectil
 			++this.ticksInAir;
 			Vec3d vec3d1 = new Vec3d(this.posX, this.posY, this.posZ);
 			Vec3d vec3d = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
-			RayTraceResult raytraceresult = this.worldObj.rayTraceBlocks(vec3d1, vec3d, false, true, false);
+			RayTraceResult raytraceresult = this.getEntityWorld().rayTraceBlocks(vec3d1, vec3d, false, true, false);
 			vec3d1 = new Vec3d(this.posX, this.posY, this.posZ);
 			vec3d = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 
 			if(raytraceresult != null)
 			{
-				vec3d = new Vec3d(raytraceresult.hitVec.xCoord, raytraceresult.hitVec.yCoord, raytraceresult.hitVec.zCoord);
+				vec3d = new Vec3d(raytraceresult.hitVec.x, raytraceresult.hitVec.y, raytraceresult.hitVec.z);
 			}
 
 			Entity entity = this.findEntityOnPath(vec3d1, vec3d);
@@ -283,7 +283,7 @@ public abstract class EntityCustomThrowable extends Entity implements IProjectil
 			this.posX += this.motionX;
 			this.posY += this.motionY;
 			this.posZ += this.motionZ;
-			float f4 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
+			float f4 = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
 			this.rotationYaw = (float) (MathHelper.atan2(this.motionX, this.motionZ) * (180D / Math.PI));
 
 			for(this.rotationPitch = (float) (MathHelper.atan2(this.motionY, (double) f4) * (180D / Math.PI)); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F)
@@ -314,7 +314,7 @@ public abstract class EntityCustomThrowable extends Entity implements IProjectil
 			{
 				for(int i = 0; i < 4; ++i)
 				{
-					this.worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * 0.25D, this.posY - this.motionY * 0.25D, this.posZ - this.motionZ * 0.25D, this.motionX, this.motionY, this.motionZ, new int[0]);
+					this.getEntityWorld().spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * 0.25D, this.posY - this.motionY * 0.25D, this.posZ - this.motionZ * 0.25D, this.motionX, this.motionY, this.motionZ, new int[0]);
 				}
 
 				f1 = 0.6F;
@@ -365,7 +365,7 @@ public abstract class EntityCustomThrowable extends Entity implements IProjectil
 				{
 					EntityLivingBase entitylivingbase = (EntityLivingBase) entity;
 
-					if(!this.worldObj.isRemote)
+					if(!this.getEntityWorld().isRemote)
 					{
 						entitylivingbase.setArrowCountInEntity(entitylivingbase.getArrowCountInEntity() + 1);
 					}
@@ -395,7 +395,7 @@ public abstract class EntityCustomThrowable extends Entity implements IProjectil
 				this.prevRotationYaw += 180.0F;
 				this.ticksInAir = 0;
 
-				if(!this.worldObj.isRemote && this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ < 0.0010000000474974513D)
+				if(!this.getEntityWorld().isRemote && this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ < 0.0010000000474974513D)
 				{
 					this.entityDropItem(this.getEntityStack(), 0.1F);
 					this.setDead();
@@ -408,24 +408,24 @@ public abstract class EntityCustomThrowable extends Entity implements IProjectil
 			this.xTile = blockpos.getX();
 			this.yTile = blockpos.getY();
 			this.zTile = blockpos.getZ();
-			IBlockState iblockstate = this.worldObj.getBlockState(blockpos);
+			IBlockState iblockstate = this.getEntityWorld().getBlockState(blockpos);
 			this.inTile = iblockstate.getBlock();
 			this.inData = this.inTile.getMetaFromState(iblockstate);
-			this.motionX = (double) ((float) (raytraceResultIn.hitVec.xCoord - this.posX));
-			this.motionY = (double) ((float) (raytraceResultIn.hitVec.yCoord - this.posY));
-			this.motionZ = (double) ((float) (raytraceResultIn.hitVec.zCoord - this.posZ));
-			float f2 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
+			this.motionX = (double) ((float) (raytraceResultIn.hitVec.x - this.posX));
+			this.motionY = (double) ((float) (raytraceResultIn.hitVec.y - this.posY));
+			this.motionZ = (double) ((float) (raytraceResultIn.hitVec.z - this.posZ));
+			float f2 = MathHelper.sqrt(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
 			this.posX -= this.motionX / (double) f2 * 0.05000000074505806D;
 			this.posY -= this.motionY / (double) f2 * 0.05000000074505806D;
 			this.posZ -= this.motionZ / (double) f2 * 0.05000000074505806D;
 			this.playSound(SoundEvents.ENTITY_ARROW_HIT, 0.5F, 0.5F);
-			this.playSound(iblockstate.getBlock().getSoundType(iblockstate, worldObj, blockpos, null).getBreakSound(), 1.5F, 1.5F);
+			this.playSound(iblockstate.getBlock().getSoundType(iblockstate, getEntityWorld(), blockpos, null).getBreakSound(), 1.5F, 1.5F);
 			this.inGround = true;
 			this.arrowShake = 7;
 
 			if(iblockstate.getMaterial() != Material.AIR)
 			{
-				this.inTile.onEntityCollidedWithBlock(this.worldObj, blockpos, iblockstate, this);
+				this.inTile.onEntityCollidedWithBlock(this.getEntityWorld(), blockpos, iblockstate, this);
 			}
 		}
 	}
@@ -435,13 +435,13 @@ public abstract class EntityCustomThrowable extends Entity implements IProjectil
 	 */
 	public void moveEntity(MoverType x, double p_70091_2_, double p_70091_4_, double p_70091_6_)
 	{
-		super.moveEntity(x, p_70091_2_, p_70091_4_, p_70091_6_);
+		super.move(x, p_70091_2_, p_70091_4_, p_70091_6_);
 
 		if(this.inGround)
 		{
-			this.xTile = MathHelper.floor_double(this.posX);
-			this.yTile = MathHelper.floor_double(this.posY);
-			this.zTile = MathHelper.floor_double(this.posZ);
+			this.xTile = MathHelper.floor(this.posX);
+			this.yTile = MathHelper.floor(this.posY);
+			this.zTile = MathHelper.floor(this.posZ);
 		}
 	}
 
@@ -453,7 +453,7 @@ public abstract class EntityCustomThrowable extends Entity implements IProjectil
 	protected Entity findEntityOnPath(Vec3d start, Vec3d end)
 	{
 		Entity entity = null;
-		List<Entity> list = this.worldObj.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox().addCoord(this.motionX, this.motionY, this.motionZ).expandXyz(1.0D), ARROW_TARGETS);
+		List<Entity> list = this.getEntityWorld().getEntitiesInAABBexcluding(this, this.getEntityBoundingBox().expand(this.motionX, this.motionY, this.motionZ).grow(1.0D), ARROW_TARGETS);
 		double d0 = 0.0D;
 
 		for(int i = 0; i < list.size(); ++i)
@@ -462,7 +462,7 @@ public abstract class EntityCustomThrowable extends Entity implements IProjectil
 
 			if(entity1 != this.shootingEntity || this.ticksInAir >= 5)
 			{
-				AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().expandXyz(0.30000001192092896D);
+				AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().grow(0.30000001192092896D);
 				RayTraceResult raytraceresult = axisalignedbb.calculateIntercept(start, end);
 
 				if(raytraceresult != null)
@@ -532,7 +532,7 @@ public abstract class EntityCustomThrowable extends Entity implements IProjectil
 	 */
 	public void onCollideWithPlayer(EntityPlayer entityIn)
 	{
-		if(!this.worldObj.isRemote && this.inGround && this.arrowShake <= 0)
+		if(!this.getEntityWorld().isRemote && this.inGround && this.arrowShake <= 0)
 		{
 			if(entityIn.capabilities.isCreativeMode)
 			{
@@ -540,7 +540,7 @@ public abstract class EntityCustomThrowable extends Entity implements IProjectil
 			}
 			else if(entityIn.inventory.addItemStackToInventory(this.getEntityStack()))
 			{
-				worldObj.playSound(entityIn, entityIn.getPosition(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 1F, 1F);
+				getEntityWorld().playSound(entityIn, entityIn.getPosition(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 1F, 1F);
 				entityIn.onItemPickup(this, 1);
 				this.setDead();
 			}
@@ -582,7 +582,7 @@ public abstract class EntityCustomThrowable extends Entity implements IProjectil
 
 	public void func_190547_a(EntityLivingBase p_190547_1_, float p_190547_2_)
 	{
-		this.setDamage((double) (p_190547_2_ * 2.0F) + this.rand.nextGaussian() * 0.25D + (double) ((float) this.worldObj.getDifficulty().getDifficultyId() * 0.11F));
+		this.setDamage((double) (p_190547_2_ * 2.0F) + this.rand.nextGaussian() * 0.25D + (double) ((float) this.getEntityWorld().getDifficulty().getDifficultyId() * 0.11F));
 	}
 
 	public boolean isInBlock()

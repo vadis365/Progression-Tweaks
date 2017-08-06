@@ -51,11 +51,11 @@ public class ItemSpear extends BaseItem
 			boolean flag = entityplayer.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, stack) > 0;
 
 			int i = this.getMaxItemUseDuration(stack) - timeLeft;
-			i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(stack, worldIn, entityplayer, i, !stack.func_190926_b() || flag);
+			i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(stack, worldIn, entityplayer, i, !stack.isEmpty() || flag);
 			if(i < 0)
 				return;
 
-			if(!stack.func_190926_b() || flag)
+			if(!stack.isEmpty() || flag)
 			{
 				float f = ItemBow.getArrowVelocity(i) / 2;
 
@@ -68,16 +68,16 @@ public class ItemSpear extends BaseItem
 
 						stack.damageItem(1, entityplayer);
 
-						worldIn.spawnEntityInWorld(entitySpear);
+						worldIn.spawnEntity(entitySpear);
 					}
 
 					worldIn.playSound((EntityPlayer) null, entityplayer.posX, entityplayer.posY, entityplayer.posZ, SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
 
 					if(!entityplayer.capabilities.isCreativeMode)
 					{
-						stack.func_190918_g(1);
+						stack.shrink(1);
 
-						if(stack.func_190926_b())
+						if(stack.isEmpty())
 						{
 							entityplayer.inventory.deleteStack(stack);
 						}

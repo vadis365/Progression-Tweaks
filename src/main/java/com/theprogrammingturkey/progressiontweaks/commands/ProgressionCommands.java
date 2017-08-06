@@ -3,7 +3,6 @@ package com.theprogrammingturkey.progressiontweaks.commands;
 import com.theprogrammingturkey.gobblecore.commands.BaseCommandHandler;
 import com.theprogrammingturkey.gobblecore.commands.CommandManager;
 import com.theprogrammingturkey.gobblecore.commands.SimpleSubCommand;
-import com.theprogrammingturkey.gobblecore.config.ConfigErrorReporter;
 import com.theprogrammingturkey.progressiontweaks.ProgressionCore;
 import com.theprogrammingturkey.progressiontweaks.config.ProgressionConfigLoader;
 
@@ -26,8 +25,8 @@ public class ProgressionCommands
 			public boolean execute(MinecraftServer server, ICommandSender sender, String[] args)
 			{
 				ProgressionConfigLoader.loadFromConfig();
-				ConfigErrorReporter.outputErrors((EntityPlayer) sender);
-				sender.addChatMessage(new TextComponentString(TextFormatting.GREEN + "Reloaded"));
+				//ConfigErrorReporter.outputErrors((EntityPlayer) sender);
+				sender.sendMessage(new TextComponentString(TextFormatting.GREEN + "Reloaded"));
 				return true;
 			}
 		});

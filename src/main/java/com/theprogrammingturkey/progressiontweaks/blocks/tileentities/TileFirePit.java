@@ -43,19 +43,19 @@ public class TileFirePit extends TileEntity implements ITickable
 			@Override
 			public void update()
 			{
-				if(!worldObj.isRemote)
+				if(!getWorld().isRemote)
 				{
-					if(worldObj == null)
+					if(getWorld() == null)
 					{
 						Scheduler.removeTask(this);
 						return;
 					}
 
-					TileEntity tileentity = worldObj.getTileEntity(pos);
+					TileEntity tileentity = getWorld().getTileEntity(pos);
 					if(tileentity != null && tileentity.equals(TileFirePit.this))
 					{
 						EntityPlayer toAttack = null;
-						for(EntityPlayer player : worldObj.playerEntities)
+						for(EntityPlayer player : getWorld().playerEntities)
 						{
 							if(player.getPosition().distanceSq(getPos()) < 10)
 							{
@@ -66,7 +66,7 @@ public class TileFirePit extends TileEntity implements ITickable
 						if(toAttack != null)
 						{
 							int radius = ProgressionSettings.firePitAttractionRadius;
-							List<EntityMob> entities = worldObj.getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(getPos().add(radius, radius, radius), getPos().add(-radius, -radius, -radius)));
+							List<EntityMob> entities = getWorld().getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(getPos().add(radius, radius, radius), getPos().add(-radius, -radius, -radius)));
 							for(EntityMob ent : entities)
 								if(ent.getAttackTarget() == null)
 									ent.setAttackTarget(toAttack);
@@ -85,20 +85,20 @@ public class TileFirePit extends TileEntity implements ITickable
 	@Override
 	public void update()
 	{
-		if(!this.worldObj.isRemote)
+		if(!this.getWorld().isRemote)
 		{
-			if(this.worldObj.isRainingAt(pos.add(0, 1, 0)))
+			if(this.getWorld().isRainingAt(pos.add(0, 1, 0)))
 			{
 				if(this.burnTimeLeft > 0)
 				{
 					burnTimeLeft = -1;
 					cookTimeLeft = -1;
-					TileEntity tileentity = this.worldObj.getTileEntity(pos);
-					this.worldObj.setBlockState(pos, ProgressionBlocks.FIRE_PIT_UNLIT.getDefaultState());
-					this.worldObj.setBlockState(pos, ProgressionBlocks.FIRE_PIT_UNLIT.getDefaultState());
+					TileEntity tileentity = this.getWorld().getTileEntity(pos);
+					this.getWorld().setBlockState(pos, ProgressionBlocks.FIRE_PIT_UNLIT.getDefaultState());
+					this.getWorld().setBlockState(pos, ProgressionBlocks.FIRE_PIT_UNLIT.getDefaultState());
 					tileentity.validate();
-					this.worldObj.setTileEntity(pos, tileentity);
-					worldObj.playSound((double) ((float) pos.getX() + 0.5F), (double) ((float) pos.getY() + 0.5F), (double) ((float) pos.getZ() + 0.5F), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+					this.getWorld().setTileEntity(pos, tileentity);
+					getWorld().playSound((double) ((float) pos.getX() + 0.5F), (double) ((float) pos.getY() + 0.5F), (double) ((float) pos.getZ() + 0.5F), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
 					NetworkManager.getSimpleNetwork(ProgressionCore.instance).sendToAll(new PacketUdateFirePit(getItemCooking(), getBurnTimeLeft(), getCookTimeLeft(), getPos().getX(), getPos().getY(), getPos().getZ()));
 				}
 				return;
@@ -113,11 +113,11 @@ public class TileFirePit extends TileEntity implements ITickable
 
 			if(burnTimeLeft == 0)
 			{
-				TileEntity tileentity = this.worldObj.getTileEntity(pos);
-				this.worldObj.setBlockState(pos, ProgressionBlocks.FIRE_PIT_UNLIT.getDefaultState());
-				this.worldObj.setBlockState(pos, ProgressionBlocks.FIRE_PIT_UNLIT.getDefaultState());
+				TileEntity tileentity = this.getWorld().getTileEntity(pos);
+				this.getWorld().setBlockState(pos, ProgressionBlocks.FIRE_PIT_UNLIT.getDefaultState());
+				this.getWorld().setBlockState(pos, ProgressionBlocks.FIRE_PIT_UNLIT.getDefaultState());
 				tileentity.validate();
-				this.worldObj.setTileEntity(pos, tileentity);
+				this.getWorld().setTileEntity(pos, tileentity);
 				burnTimeLeft = -1;
 				NetworkManager.getSimpleNetwork(ProgressionCore.instance).sendToAll(new PacketUdateFirePit(getItemCooking(), getBurnTimeLeft(), getCookTimeLeft(), getPos().getX(), getPos().getY(), getPos().getZ()));
 			}
@@ -128,7 +128,7 @@ public class TileFirePit extends TileEntity implements ITickable
 				if(result != null)
 				{
 					this.setCooking(result.getResult());
-					this.worldObj.spawnEntityInWorld(new EntityXPOrb(worldObj, this.pos.getX(), this.pos.getY(), this.pos.getZ(), result.getXp()));
+					this.getWorld().spawnEntity(new EntityXPOrb(getWorld(), this.pos.getX(), this.pos.getY(), this.pos.getZ(), result.getXp()));
 					cookTimeLeft = -1;
 					NetworkManager.getSimpleNetwork(ProgressionCore.instance).sendToAll(new PacketUdateFirePit(getItemCooking(), getBurnTimeLeft(), getCookTimeLeft(), getPos().getX(), getPos().getY(), getPos().getZ()));
 				}
@@ -149,7 +149,7 @@ public class TileFirePit extends TileEntity implements ITickable
 	public void startCooking(ItemStack stack, int duration)
 	{
 		this.cooking = stack.copy();
-		this.cooking.func_190920_e(1);
+		this.cooking.setCount(1);
 		this.cookTimeLeft = duration;
 	}
 
@@ -158,7 +158,7 @@ public class TileFirePit extends TileEntity implements ITickable
 		if(stack != null)
 		{
 			this.cooking = stack.copy();
-			this.cooking.func_190920_e(1);
+			this.cooking.setCount(1);
 		}
 		else
 		{
@@ -169,11 +169,11 @@ public class TileFirePit extends TileEntity implements ITickable
 	public void startBurnTime(int burnTime)
 	{
 		this.burnTimeLeft = burnTime;
-		TileEntity tileentity = this.worldObj.getTileEntity(pos);
-		this.worldObj.setBlockState(pos, ProgressionBlocks.FIRE_PIT_LIT.getDefaultState());
-		this.worldObj.setBlockState(pos, ProgressionBlocks.FIRE_PIT_LIT.getDefaultState());
+		TileEntity tileentity = this.getWorld().getTileEntity(pos);
+		this.getWorld().setBlockState(pos, ProgressionBlocks.FIRE_PIT_LIT.getDefaultState());
+		this.getWorld().setBlockState(pos, ProgressionBlocks.FIRE_PIT_LIT.getDefaultState());
 		tileentity.validate();
-		this.worldObj.setTileEntity(pos, tileentity);
+		this.getWorld().setTileEntity(pos, tileentity);
 		NetworkManager.getSimpleNetwork(ProgressionCore.instance).sendToAll(new PacketUdateFirePit(getItemCooking(), getBurnTimeLeft(), getCookTimeLeft(), getPos().getX(), getPos().getY(), getPos().getZ()));
 	}
 
@@ -201,9 +201,9 @@ public class TileFirePit extends TileEntity implements ITickable
 	{
 		if(this.cooking != null)
 		{
-			EntityItem entityitem = new EntityItem(player.worldObj, player.posX, player.posY, player.posZ, this.cooking.copy());
+			EntityItem entityitem = new EntityItem(player.getEntityWorld(), player.posX, player.posY, player.posZ, this.cooking.copy());
 			entityitem.setPickupDelay(5);
-			player.worldObj.spawnEntityInWorld(entityitem);
+			player.getEntityWorld().spawnEntity(entityitem);
 			this.cooking = null;
 		}
 	}

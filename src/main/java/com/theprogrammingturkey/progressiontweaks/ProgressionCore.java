@@ -1,6 +1,6 @@
 package com.theprogrammingturkey.progressiontweaks;
 
-import org.apache.logging.log4j.Logger;
+import java.util.logging.Logger;
 
 import com.google.gson.JsonElement;
 import com.theprogrammingturkey.gobblecore.IModCore;
@@ -9,7 +9,6 @@ import com.theprogrammingturkey.gobblecore.entity.EntityManager;
 import com.theprogrammingturkey.gobblecore.items.ItemManager;
 import com.theprogrammingturkey.gobblecore.managers.WebHookManager;
 import com.theprogrammingturkey.gobblecore.managers.WebHookManager.ModWebHook;
-import com.theprogrammingturkey.gobblecore.network.NetworkManager;
 import com.theprogrammingturkey.gobblecore.proxy.IBaseProxy;
 import com.theprogrammingturkey.gobblecore.proxy.ProxyManager;
 import com.theprogrammingturkey.progressiontweaks.blocks.ProgressionBlocks;
@@ -23,6 +22,7 @@ import com.theprogrammingturkey.progressiontweaks.util.ProgressionCrafting;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.NetworkManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -65,7 +65,7 @@ public class ProgressionCore implements IModCore
 	@EventHandler
 	public void load(FMLPreInitializationEvent event)
 	{
-		logger = event.getModLog();
+		logger = (Logger) event.getModLog();
 		ProgressionConfigLoader.loadConfigSettings(event.getSuggestedConfigurationFile());
 
 		ProxyManager.registerModProxy(proxy);

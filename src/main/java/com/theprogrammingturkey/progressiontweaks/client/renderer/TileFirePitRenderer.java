@@ -20,14 +20,14 @@ public class TileFirePitRenderer extends TileEntitySpecialRenderer<TileFirePit>
 	}
 
 	@Override
-	public void renderTileEntityAt(TileFirePit te, double x, double y, double z, float partialTicks, int destroyStage)
+	public void render(TileFirePit te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
 		World world = te.getWorld();
 
 		if(!world.getBlockState(te.getPos()).getBlock().equals(ProgressionBlocks.FIRE_PIT_LIT) && !world.getBlockState(te.getPos()).getBlock().equals(ProgressionBlocks.FIRE_PIT_UNLIT))
 			return;
 
-		if(te.getItemCooking() != null)
+		if(!te.getItemCooking().isEmpty())
 		{
 			if(cooking == null)
 			{
@@ -35,8 +35,8 @@ public class TileFirePitRenderer extends TileEntitySpecialRenderer<TileFirePit>
 				cooking.setNoDespawn();
 			}
 
-			if(!cooking.getEntityItem().getItem().equals(te.getItemCooking().getItem()) || cooking.getEntityItem().getItemDamage() != te.getItemCooking().getItemDamage())
-				cooking.setEntityItemStack(te.getItemCooking());
+			if(!cooking.getItem().getItem().equals(te.getItemCooking().getItem()) || cooking.getItem().getItemDamage() != te.getItemCooking().getItemDamage())
+				cooking.setItem(te.getItemCooking());
 
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(x + 0.5, y - 0.1, z + 0.5);

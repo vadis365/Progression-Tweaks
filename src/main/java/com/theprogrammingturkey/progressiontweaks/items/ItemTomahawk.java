@@ -28,7 +28,7 @@ public class ItemTomahawk extends BaseItem
 
 		if(!playerIn.capabilities.isCreativeMode)
 		{
-			itemstack.func_190918_g(1);
+			itemstack.shrink(1);
 		}
 
 		worldIn.playSound((EntityPlayer) null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
@@ -37,7 +37,7 @@ public class ItemTomahawk extends BaseItem
 		{
 			EntityTomahawk tomahawk = new EntityTomahawk(worldIn, playerIn);
 			tomahawk.setAim(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1f, 1.0F);
-			worldIn.spawnEntityInWorld(tomahawk);
+			worldIn.spawnEntity(tomahawk);
 		}
 
 		playerIn.addStat(StatList.getObjectUseStats(this));
